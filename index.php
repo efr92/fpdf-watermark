@@ -53,7 +53,7 @@ class WaterMark
             $this->pdf->AddFont('Montserrat','','Montserrat.php');
             $this->pdf->SetFont('Montserrat', '', 50);
             $this->pdf->SetTextColor(80,80,80);
-            $this->pdf->SetXY(80, 160);
+            $this->pdf->SetXY(70, 160);
             $this->_rotate(45);
             $this->pdf->Write(0, iconv('utf-8', 'windows-1251', $this->wmText.$k));
             $this->_rotate(0);
@@ -96,11 +96,20 @@ class WaterMark
     }
 
 }
+
 // header('Content-type: application/pdf');
 header('Content-Disposition: attachment; filename="downloaded.pdf"');
 
-for ($k = 1; $k <= 1000; $k++) {
+
+if ($_COOKIE["pdf_key"]) {
+    $key = $_COOKIE["pdf_key"]+12;
+} else {
+    $key = 1;
+}
+
+for ($k = $key; $k <= 2000; $k++) {
     $fullPathToProcessFile = dirname(__DIR__) .'/pdf/ready/gaid('.$k.').pdf';
+    setcookie("pdf_key", $k, time()+48400);
 
     WaterMark::applyAndSpit($fullPathToFile, $fullPathToProcessFile, $k);
 }
